@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlayerMotor : MonoBehaviour
 {
     [SerializeField] Camera playerCam;
+    [SerializeField] PlayerController playerController;
 
     private Vector3 velocity = Vector3.zero;
     private Vector3 rotation = Vector3.zero;
@@ -22,8 +23,11 @@ public class PlayerMotor : MonoBehaviour
     // Run every physics iteration
     void FixedUpdate()
     {
-        PerformMovement();
-        PerformRotation();
+        if (!playerController.gameIsPaused)
+        {
+            PerformMovement();
+            PerformRotation();
+        }
     }
 
     public void MovePlayer(Vector3 _playerVelocity)

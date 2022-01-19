@@ -7,12 +7,15 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] float playerSpeed = 5.0f;
     [SerializeField] float lookSensitivity = 3.0f;
+    public bool gameIsPaused;
 
+    [SerializeField] Canvas pauseMenu;
     PlayerMotor playerMotor;
 
     void Start()
     {
         playerMotor = GetComponent<PlayerMotor>();
+        ResumeGame();
     }
 
     void Update()
@@ -20,6 +23,7 @@ public class PlayerController : MonoBehaviour
         CalculateVelocity();
         CalculateRotation();
         CalculateCameraRotation();
+        PauseController();
     }
 
     // Calculate movement velocity as a 3D vector
@@ -47,7 +51,7 @@ public class PlayerController : MonoBehaviour
 
         //Apply rotation
         playerMotor.RotatePlayer(_rotation);
-    }
+     }
 
     // Calculate camera rotation as a 3D vector (Looking up/down)
     void CalculateCameraRotation()
@@ -58,5 +62,30 @@ public class PlayerController : MonoBehaviour
 
         //Apply rotation
         playerMotor.RotateCamera(_cameraRotation);
+    }
+
+    void PauseController()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            PauseGame();
+        }else if(Input.GetKeyDown(KeyCode.Escape) && gameIsPaused)
+        {
+            ResumeGame();
+        }
+    }
+
+    public void PauseGame()
+    {
+        gameIsPaused = true;
+        Cursor.lockState = CursorLockMode.None;
+        pauseMenu.gameObject.SetActive(true);
+    }
+
+    public void ResumeGame()
+    {
+        gameIsPaused = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        pauseMenu.gameObject.SetActive(false);
     }
 }

@@ -9,15 +9,15 @@ public class PlayerSetup : NetworkBehaviour
 
     Camera sceneCamera;
 
+    [SerializeField] string remoteLayerName = "RemotePlayer";
+
     // Start is called before the first frame update
     void Start()
     {
         if (!isLocalPlayer)
         {
-            for(int i = 0; i < componentsToDisable.Length; i++)
-            {
-                componentsToDisable[i].enabled = false;
-            }
+            DisableComponents();
+            AssignRemoteLayer();
         } else
         {
             sceneCamera = Camera.main;
@@ -26,6 +26,8 @@ public class PlayerSetup : NetworkBehaviour
                 sceneCamera.gameObject.SetActive(false);
             }
         }
+
+        RegisterPlayer();
     }
 
     private void OnDisable()
@@ -34,5 +36,24 @@ public class PlayerSetup : NetworkBehaviour
         {
             sceneCamera.gameObject.SetActive(true);
         }
+    }
+
+    void DisableComponents()
+    {
+        for (int i = 0; i < componentsToDisable.Length; i++)
+        {
+            componentsToDisable[i].enabled = false;
+        }
+    }
+
+    void AssignRemoteLayer()
+    {
+        gameObject.layer = LayerMask.NameToLayer(remoteLayerName);
+    }
+
+    void RegisterPlayer()
+    {
+        string _ID = "Player " + GetComponent<NetworkIdentity>().netId;
+        transform.name = _ID;
     }
 }
